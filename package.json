@@ -1,0 +1,34 @@
+{
+  "name": "refined-text-search",
+  "version": "1.0.0",
+  "description": "Tokenize a search query with refined options (like google's) and match against a target",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "abc test && abc lint",
+    "build": "abc build",
+    "version": "abc build"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "abc-environment": "^2.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/queicherius/refined-text-search.git"
+  },
+  "keywords": [
+    "search",
+    "text",
+    "google",
+    "refined",
+    "match",
+    "target",
+    "query"
+  ],
+  "author": "queicherius@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/queicherius/refined-text-search/issues"
+  },
+  "homepage": "https://github.com/queicherius/refined-text-search#readme"
+}
