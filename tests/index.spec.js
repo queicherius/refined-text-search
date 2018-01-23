@@ -70,6 +70,7 @@ describe('tokenize', () => {
 describe('match', () => {
   it('single word', async () => {
     expect(match('dependent')).to.equal(true)
+    expect(match('up')).to.equal(true)
     expect(match('herp')).to.equal(false)
   })
 

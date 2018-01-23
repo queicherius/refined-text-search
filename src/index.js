@@ -31,6 +31,8 @@ export function tokenize (query) {
 }
 
 export function match (tokens, text) {
+  text = text.toLowerCase()
+
   for (let i = 0; i !== tokens.length; i++) {
     const token = tokens[i]
     const match = text.indexOf(token.term) !== -1
