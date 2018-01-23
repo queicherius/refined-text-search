@@ -1,7 +1,7 @@
 {
   "name": "refined-text-search",
   "version": "1.0.0",
-  "description": "Tokenize a search query with refined options (like google's) and match against a target",
+  "description": "Tokenize a search query with refined options (like Google's) and match against a target",
   "main": "build/index.js",
   "scripts": {
     "test": "abc test && abc lint",
