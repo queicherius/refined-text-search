@@ -1,6 +1,6 @@
 {
   "name": "refined-text-search",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tokenize a search query with refined options (like Google's) and match against a target",
   "main": "build/index.js",
   "scripts": {
