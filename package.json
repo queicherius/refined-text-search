@@ -2,20 +2,12 @@
   "name": "refined-text-search",
   "version": "1.0.2",
   "description": "Tokenize a search query with refined options (like Google's) and match against a target",
-  "main": "build/index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "abc test && abc lint",
-    "build": "abc build",
-    "version": "abc build"
+    "test": "jest --coverage && standard"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "abc-environment": "^2.0.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/queicherius/refined-text-search.git"
-  },
+  "author": "queicherius@gmail.com",
+  "license": "MIT",
   "keywords": [
     "search",
     "text",
@@ -25,10 +17,12 @@
     "target",
     "query"
   ],
-  "author": "queicherius@gmail.com",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/queicherius/refined-text-search/issues"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/queicherius/refined-text-search.git"
   },
-  "homepage": "https://github.com/queicherius/refined-text-search#readme"
+  "devDependencies": {
+    "jest": "^23.6.0",
+    "standard": "^12.0.1"
+  }
 }

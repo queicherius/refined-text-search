@@ -16,7 +16,7 @@ This module can be used for Node.js as well as browsers using [Browserify](https
 ## Usage
 
 ```js
-import {tokenize, match} from 'refined-text-search'
+const {tokenize, match} = require('refined-text-search')
 
 // Tokenize a search query
 const tokens = tokenize('"Hello World" my dear -"how are you" -horrible oh')
