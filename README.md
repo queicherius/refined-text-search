@@ -1,7 +1,7 @@
 # refined-text-search
 
 [![Build Status](https://img.shields.io/travis/queicherius/refined-text-search.svg?style=flat-square)](https://travis-ci.org/queicherius/refined-text-search)
-[![Coverage Status](https://img.shields.io/codecov/c/github/queicherius/refined-text-search/master.svg?style=flat-square)](https://codecov.io/github/queicherius/refined-text-search)
+[![Coverage Status](https://img.shields.io/codecov/c/github/queicherius/refined-text-search/master.svg?style=flat-square)](https://codecov.io/github/queicherius/refined-text-search) [![Greenkeeper badge](https://badges.greenkeeper.io/queicherius/refined-text-search.svg)](https://greenkeeper.io/)
 
 > Tokenize a search query with refined options (like Google's) and match against a target
 
