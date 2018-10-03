@@ -1,6 +1,6 @@
 const pattern = /(-)?("[^"]*"|[^\s]+)/g
 
-export function tokenize (query) {
+function tokenize (query) {
   query = query.toLowerCase().trim()
 
   let results = []
@@ -30,7 +30,7 @@ export function tokenize (query) {
   return results
 }
 
-export function match (tokens, text) {
+function match (tokens, text) {
   text = text.toLowerCase()
 
   for (let i = 0; i !== tokens.length; i++) {
@@ -48,3 +48,5 @@ export function match (tokens, text) {
 
   return true
 }
+
+module.exports = { tokenize, match }
