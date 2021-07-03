@@ -47,6 +47,26 @@ describe('tokenize', () => {
     ])
   })
 
+  it('or', async () => {
+    expect(tokenize('herp OR derp flerp')).toEqual([
+      { or: true, children: [[{ term: 'herp' }], [{ term: 'derp' }, { term: 'flerp' }]] },
+    ])
+
+    expect(tokenize('herp OR derp -flerp')).toEqual([
+      {
+        or: true,
+        children: [[{ term: 'herp' }], [{ term: 'flerp', exclude: true }, { term: 'derp' }]],
+      },
+    ])
+
+    expect(tokenize('herp OR derp OR flerp')).toEqual([
+      {
+        or: true,
+        children: [[{ term: 'herp' }], [{ term: 'derp' }], [{ term: 'flerp' }]],
+      },
+    ])
+  })
+
   it('kitchen sink', async () => {
     expect(tokenize('"Hello World" my dear -"how are you" -horrible oh')).toEqual([
       { term: 'how are you', exclude: true },
@@ -88,6 +108,19 @@ describe('match', () => {
     expect(oneStepMatch('-"possible throwing"')).toEqual(true)
     expect(oneStepMatch('-pleasure')).toEqual(false)
     expect(oneStepMatch('-"pleasure possible"')).toEqual(false)
+  })
+
+  it('or', async () => {
+    expect(oneStepMatch('possible OR woman')).toEqual(true)
+    expect(oneStepMatch('herp OR derp | intention')).toEqual(true)
+    expect(oneStepMatch('herp OR derp')).toEqual(false)
+
+    expect(oneStepMatch('herp OR "any shell"')).toEqual(false)
+    expect(oneStepMatch('herp OR "any shall"')).toEqual(true)
+
+    expect(oneStepMatch('-possible OR -woman')).toEqual(false)
+    expect(oneStepMatch('herp OR derp | -intention')).toEqual(false)
+    expect(oneStepMatch('herp OR -derp')).toEqual(true)
   })
 
   it('kitchen sink', async () => {

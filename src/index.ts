@@ -1,13 +1,28 @@
 const pattern = /(-)?("[^"]*"|[^\s]+)/g
 
+interface OrClause {
+  or: true
+  children: Array<Array<Token>>
+}
+
 interface Token {
   term: string
   exclude?: boolean
 }
 
-export function tokenize(query: string) {
+export function tokenize(query: string): Array<OrClause | Token> {
   query = query.toLowerCase().trim()
 
+  const orClauses = query.split(/ or | \| /)
+
+  if (orClauses.length === 1) {
+    return tokenizeClause(orClauses[0])
+  }
+
+  return [{ or: true, children: orClauses.map(tokenizeClause) }]
+}
+
+export function tokenizeClause(query: string) {
   const tokens: Array<Token> = []
   let matched
 
@@ -30,18 +45,23 @@ export function tokenize(query: string) {
   return tokens
 }
 
-export function match(tokens: Array<Token>, text: string) {
+export function match(tokens: Array<OrClause | Token>, text: string): boolean {
   text = text.toLowerCase()
 
   for (let i = 0; i !== tokens.length; i++) {
     const token = tokens[i]
-    const match = text.indexOf(token.term) !== -1
 
-    if (token.exclude && match) {
+    if ('or' in token) {
+      return token.children.some((childTokens) => match(childTokens, text))
+    }
+
+    const textMatch = text.indexOf(token.term) !== -1
+
+    if (token.exclude && textMatch) {
       return false
     }
 
-    if (!token.exclude && !match) {
+    if (!token.exclude && !textMatch) {
       return false
     }
   }
