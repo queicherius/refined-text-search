@@ -1,5 +1,5 @@
 /* eslint-env jest */
-const { tokenize, match } = require('../src/index.js')
+import { tokenize, match } from '../src/index'
 
 const TEXT = `
 Up am intention on dependent questions oh elsewhere september.
@@ -7,50 +7,43 @@ No betrayed pleasure possible jointure we in throwing.
 And can event rapid any shall woman green.
 `
 
-function oneStepMatch (query) {
-  query = tokenize(query)
-  return match(query, TEXT)
+function oneStepMatch(query: string) {
+  const tokens = tokenize(query)
+  return match(tokens, TEXT)
 }
 
 describe('tokenize', () => {
   it('single word', async () => {
-    expect(tokenize(' Dependent   ')).toEqual([
-      { term: 'dependent' }
-    ])
+    expect(tokenize(' Dependent   ')).toEqual([{ term: 'dependent' }])
   })
 
   it('multiple words', async () => {
-    expect(tokenize('on dependent')).toEqual([
-      { term: 'on' },
-      { term: 'dependent' }
-    ])
+    expect(tokenize('on dependent')).toEqual([{ term: 'on' }, { term: 'dependent' }])
   })
 
   it('multiple words with lots of spaces', async () => {
     expect(tokenize('   on          dependent       ')).toEqual([
       { term: 'on' },
-      { term: 'dependent' }
+      { term: 'dependent' },
     ])
   })
 
   it('single phrase', async () => {
-    expect(tokenize('"on dependent"')).toEqual([
-      { term: 'on dependent' }
-    ])
+    expect(tokenize('"on dependent"')).toEqual([{ term: 'on dependent' }])
   })
 
   it('multiple phrases', async () => {
     expect(tokenize('"on dependent" "herp di derp" "flerp"')).toEqual([
       { term: 'on dependent' },
       { term: 'herp di derp' },
-      { term: 'flerp' }
+      { term: 'flerp' },
     ])
   })
 
   it('exclude', async () => {
     expect(tokenize('-herp -"herp derp"')).toEqual([
       { term: 'herp', exclude: true },
-      { term: 'herp derp', exclude: true }
+      { term: 'herp derp', exclude: true },
     ])
   })
 
@@ -61,7 +54,7 @@ describe('tokenize', () => {
       { term: 'hello world' },
       { term: 'my' },
       { term: 'dear' },
-      { term: 'oh' }
+      { term: 'oh' },
     ])
   })
 })

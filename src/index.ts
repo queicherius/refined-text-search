@@ -1,36 +1,36 @@
 const pattern = /(-)?("[^"]*"|[^\s]+)/g
 
-function tokenize (query) {
+interface Token {
+  term: string
+  exclude?: boolean
+}
+
+export function tokenize(query: string) {
   query = query.toLowerCase().trim()
 
-  let results = []
+  const tokens: Array<Token> = []
   let matched
 
-  // eslint-disable-next-line
-  while (matched = pattern.exec(query)) {
+  while ((matched = pattern.exec(query))) {
     const prefix = matched[1]
     let term = matched[2]
-    let result = {}
 
     // Strip quotes
     term = term.replace(/(^"|"$)/g, '')
-    result.term = term
 
     // Set flags based on prefix
-    if (prefix === '-') {
-      result.exclude = true
-    }
+    const exclude = prefix === '-' ? true : undefined
 
-    results.push(result)
+    tokens.push({ term, exclude })
   }
 
   // Sort the results so the terms with the exclude flag are at the very start
-  results.sort((a, b) => (a.exclude === b.exclude) ? 0 : a.exclude ? -1 : 1)
+  tokens.sort((a, b) => (a.exclude === b.exclude ? 0 : a.exclude ? -1 : 1))
 
-  return results
+  return tokens
 }
 
-function match (tokens, text) {
+export function match(tokens: Array<Token>, text: string) {
   text = text.toLowerCase()
 
   for (let i = 0; i !== tokens.length; i++) {
@@ -48,5 +48,3 @@ function match (tokens, text) {
 
   return true
 }
-
-module.exports = { tokenize, match }
