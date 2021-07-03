@@ -110,6 +110,19 @@ describe('match', () => {
     expect(oneStepMatch('-"pleasure possible"')).toEqual(false)
   })
 
+  it('or', async () => {
+    expect(oneStepMatch('possible OR woman')).toEqual(true)
+    expect(oneStepMatch('herp OR derp | intention')).toEqual(true)
+    expect(oneStepMatch('herp OR derp')).toEqual(false)
+
+    expect(oneStepMatch('herp OR "any shell"')).toEqual(false)
+    expect(oneStepMatch('herp OR "any shall"')).toEqual(true)
+
+    expect(oneStepMatch('-possible OR -woman')).toEqual(false)
+    expect(oneStepMatch('herp OR derp | -intention')).toEqual(false)
+    expect(oneStepMatch('herp OR -derp')).toEqual(true)
+  })
+
   it('kitchen sink', async () => {
     expect(oneStepMatch('"possible jointure" -"herp derp" -derp woman')).toEqual(true)
     expect(oneStepMatch('-"possible jointure" -"herp derp" -derp woman')).toEqual(false)

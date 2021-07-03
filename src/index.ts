@@ -45,18 +45,23 @@ export function tokenizeClause(query: string) {
   return tokens
 }
 
-export function match(tokens: Array<Token>, text: string) {
+export function match(tokens: Array<OrClause | Token>, text: string): boolean {
   text = text.toLowerCase()
 
   for (let i = 0; i !== tokens.length; i++) {
     const token = tokens[i]
-    const match = text.indexOf(token.term) !== -1
 
-    if (token.exclude && match) {
+    if ('or' in token) {
+      return token.children.some((childTokens) => match(childTokens, text))
+    }
+
+    const textMatch = text.indexOf(token.term) !== -1
+
+    if (token.exclude && textMatch) {
       return false
     }
 
-    if (!token.exclude && !match) {
+    if (!token.exclude && !textMatch) {
       return false
     }
   }
