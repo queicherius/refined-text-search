@@ -47,6 +47,26 @@ describe('tokenize', () => {
     ])
   })
 
+  it('or', async () => {
+    expect(tokenize('herp OR derp flerp')).toEqual([
+      { or: true, children: [[{ term: 'herp' }], [{ term: 'derp' }, { term: 'flerp' }]] },
+    ])
+
+    expect(tokenize('herp OR derp -flerp')).toEqual([
+      {
+        or: true,
+        children: [[{ term: 'herp' }], [{ term: 'flerp', exclude: true }, { term: 'derp' }]],
+      },
+    ])
+
+    expect(tokenize('herp OR derp OR flerp')).toEqual([
+      {
+        or: true,
+        children: [[{ term: 'herp' }], [{ term: 'derp' }], [{ term: 'flerp' }]],
+      },
+    ])
+  })
+
   it('kitchen sink', async () => {
     expect(tokenize('"Hello World" my dear -"how are you" -horrible oh')).toEqual([
       { term: 'how are you', exclude: true },
