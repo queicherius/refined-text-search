@@ -38,7 +38,11 @@ export function tokenizeClause(query: string) {
     const exclude = prefix === '-' ? true : undefined
     const exact = prefix === '=' ? true : undefined
 
-    tokens.push({ term, exclude, exact })
+    tokens.push({
+      term,
+      ...(exclude ? { exclude } : {}),
+      ...(exact ? { exact } : {}),
+    })
   }
 
   // Sort the results so the terms with the exclude flag are at the very start
@@ -48,7 +52,7 @@ export function tokenizeClause(query: string) {
 }
 
 export function match(tokens: Array<OrClause | Token>, text: string): boolean {
-  text = text.toLowerCase()
+  text = text.replace(/\s+/g, ' ').trim().toLowerCase()
 
   for (let i = 0; i !== tokens.length; i++) {
     const token = tokens[i]
