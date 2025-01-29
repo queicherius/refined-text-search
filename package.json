@@ -1,7 +1,7 @@
 {
   "name": "refined-text-search",
   "description": "Tokenize a search query with refined options (like Google's) and match against a target",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "main": "dist/src/index.js",
   "license": "MIT",
   "repository": {
