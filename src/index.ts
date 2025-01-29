@@ -1,4 +1,4 @@
-const pattern = /(-)?("[^"]*"|[^\s]+)/g
+const pattern = /(=|-)?("[^"]*"|[^\s]+)/g
 
 interface OrClause {
   or: true
@@ -8,6 +8,7 @@ interface OrClause {
 interface Token {
   term: string
   exclude?: boolean
+  exact?: boolean
 }
 
 export function tokenize(query: string): Array<OrClause | Token> {
@@ -35,8 +36,13 @@ export function tokenizeClause(query: string) {
 
     // Set flags based on prefix
     const exclude = prefix === '-' ? true : undefined
+    const exact = prefix === '=' ? true : undefined
 
-    tokens.push({ term, exclude })
+    tokens.push({
+      term,
+      ...(exclude ? { exclude } : {}),
+      ...(exact ? { exact } : {}),
+    })
   }
 
   // Sort the results so the terms with the exclude flag are at the very start
@@ -46,7 +52,7 @@ export function tokenizeClause(query: string) {
 }
 
 export function match(tokens: Array<OrClause | Token>, text: string): boolean {
-  text = text.toLowerCase()
+  text = text.replace(/\s+/g, ' ').trim().toLowerCase()
 
   for (let i = 0; i !== tokens.length; i++) {
     const token = tokens[i]
@@ -55,7 +61,7 @@ export function match(tokens: Array<OrClause | Token>, text: string): boolean {
       return token.children.some((childTokens) => match(childTokens, text))
     }
 
-    const textMatch = text.indexOf(token.term) !== -1
+    const textMatch = token.exact ? text === token.term : text.indexOf(token.term) !== -1
 
     if (token.exclude && textMatch) {
       return false

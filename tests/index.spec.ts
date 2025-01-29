@@ -47,6 +47,13 @@ describe('tokenize', () => {
     ])
   })
 
+  it('exact', async () => {
+    expect(tokenize('=herp ="herp derp"')).toEqual([
+      { term: 'herp', exact: true },
+      { term: 'herp derp', exact: true },
+    ])
+  })
+
   it('or', async () => {
     expect(tokenize('herp OR derp flerp')).toEqual([
       { or: true, children: [[{ term: 'herp' }], [{ term: 'derp' }, { term: 'flerp' }]] },
@@ -65,16 +72,31 @@ describe('tokenize', () => {
         children: [[{ term: 'herp' }], [{ term: 'derp' }], [{ term: 'flerp' }]],
       },
     ])
+
+    expect(tokenize('herp OR =derp -flerp')).toEqual([
+      {
+        or: true,
+        children: [
+          [{ term: 'herp' }],
+          [
+            { term: 'flerp', exclude: true },
+            { term: 'derp', exact: true },
+          ],
+        ],
+      },
+    ])
   })
 
   it('kitchen sink', async () => {
-    expect(tokenize('"Hello World" my dear -"how are you" -horrible oh')).toEqual([
+    expect(tokenize('"Hello World" my dear -"how are you" -horrible oh =that ="is sad"')).toEqual([
       { term: 'how are you', exclude: true },
       { term: 'horrible', exclude: true },
       { term: 'hello world' },
       { term: 'my' },
       { term: 'dear' },
       { term: 'oh' },
+      { term: 'that', exact: true },
+      { term: 'is sad', exact: true },
     ])
   })
 })
@@ -110,6 +132,24 @@ describe('match', () => {
     expect(oneStepMatch('-"pleasure possible"')).toEqual(false)
   })
 
+  it('exact', async () => {
+    expect(
+      oneStepMatch(
+        '="Up am intention on dependent questions oh elsewhere september. No betrayed pleasure possible jointure we in throwing. And can event rapid any shall woman green."'
+      )
+    ).toEqual(true)
+    expect(
+      oneStepMatch(
+        '="Up am intention on dependent questions oh elsewhere september. No betrayed pleasure possible jointure we in throwing. And can event rapid any shall woman green"'
+      )
+    ).toEqual(false)
+    expect(
+      oneStepMatch(
+        '=Up am intention on dependent questions oh elsewhere september. No betrayed pleasure possible jointure we in throwing. And can event rapid any shall woman green.'
+      )
+    ).toEqual(false)
+  })
+
   it('or', async () => {
     expect(oneStepMatch('possible OR woman')).toEqual(true)
     expect(oneStepMatch('herp OR derp | intention')).toEqual(true)
@@ -121,6 +161,7 @@ describe('match', () => {
     expect(oneStepMatch('-possible OR -woman')).toEqual(false)
     expect(oneStepMatch('herp OR derp | -intention')).toEqual(false)
     expect(oneStepMatch('herp OR -derp')).toEqual(true)
+    expect(oneStepMatch('=herp OR -derp')).toEqual(true)
   })
 
   it('kitchen sink', async () => {
@@ -129,5 +170,6 @@ describe('match', () => {
     expect(oneStepMatch('"possible jointure" -"herp derp" -derp -woman')).toEqual(false)
     expect(oneStepMatch('"possible jointure" "herp derp" -derp woman')).toEqual(false)
     expect(oneStepMatch('"possible jointure" -"herp derp" derp woman')).toEqual(false)
+    expect(oneStepMatch('="possible jointure" -"herp derp" -derp woman')).toEqual(false)
   })
 })
